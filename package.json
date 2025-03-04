@@ -23,6 +23,11 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0",
     "vision-2030-platform": "file:"
   },
   "repository": {
@@ -32,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/munyaradzichiondegwa/vision-2030-platform/issues"
   },
-  "homepage": "https://github.com/munyaradzichiondegwa/vision-2030-platform#readme"
+  "homepage": "https://github.com/munyaradzichiondegwa/vision-2030-platform#readme",
+  "devDependencies": {
+    "@types/node": "^22.13.9"
+  }
 }
