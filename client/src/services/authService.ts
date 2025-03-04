@@ -46,3 +46,4 @@ export const checkAuthStatus = async (): Promise<User | null> => {
     return null;
   }
 };
+
