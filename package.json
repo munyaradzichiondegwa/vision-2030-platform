@@ -1,20 +1,36 @@
 {
   "name": "vision-2030-platform",
   "version": "1.0.0",
-  "description": "",
+  "description": "Vision 2030 Comprehensive Platform",
   "main": "index.js",
   "directories": {
     "doc": "docs",
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "keywords": [
+    "vision",
+    "platform",
+    "development"
+  ],
+  "author": "munyaradzi chiondegwa",
+  "license": "MIT",
+  "type": "module",
   "dependencies": {
     "vision-2030-platform": "file:"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/munyaradzichiondegwa/vision-2030-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/munyaradzichiondegwa/vision-2030-platform/issues"
+  },
+  "homepage": "https://github.com/munyaradzichiondegwa/vision-2030-platform#readme"
 }
