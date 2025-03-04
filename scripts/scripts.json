@@ -1,0 +1,5 @@
+"scripts": {
+  "start": "cross-env NODE_ENV=production ts-node-dev src/server.ts",
+  "dev": "cross-env NODE_ENV=development ts-node-dev src/server.ts",
+  "test": "cross-env NODE_ENV=test jest"
+}
