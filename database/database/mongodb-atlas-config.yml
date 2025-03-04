@@ -1,0 +1,14 @@
+# database/mongodb-atlas-config.yml
+projectName: vision-2030-platform
+cluster:
+  name: production-cluster
+  provider: AWS
+  region: US_EAST_1
+  tier: M30
+databaseAccess:
+  - username: app-user
+    password: ${DB_PASSWORD}
+    role: readWriteAnyDatabase
+networkAccess:
+  - cidrBlock: 0.0.0.0/0
+    comment: "Allowing public access"
