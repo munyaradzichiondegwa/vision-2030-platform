@@ -79,6 +79,7 @@
     "@types/jest": "^29.5.14",
     "@types/js-yaml": "^4.0.9",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/mathjs": "^9.4.1",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^22.13.9",
     "@types/nodemailer": "^6.4.17",
