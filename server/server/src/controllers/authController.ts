@@ -1,48 +1,77 @@
-// server/src/controllers/authController.ts
-import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import User from "../models/User";
-import environment from "../config/environment";
+import { Request, Response, NextFunction } from "express";
+import AuthService from "../services/authService";
+import asyncHandler from "../utils/asyncHandler";
 
-export const register = async (req: Request, res: Response) => {
-  const { username, email, password } = req.body;
+class AuthController {
+  // User Registration
+  register = asyncHandler(async (req: Request, res: Response) => {
+    const { email, username, password } = req.body;
 
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword });
-    await user.save();
-
-    const token = jwt.sign({ userId: user._id }, environment.JWT_SECRET, {
-      expiresIn: environment.JWT_EXPIRES_IN,
+    const user = await AuthService.register({
+      email,
+      username,
+      password,
     });
 
-    res.status(201).json({ token });
-  } catch (error) {
-    res.status(400).json({ message: "Registration failed", error });
-  }
-};
-
-export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid email or password" });
-    }
-
-    const token = jwt.sign({ userId: user._id }, environment.JWT_SECRET, {
-      expiresIn: environment.JWT_EXPIRES_IN,
+    res.status(201).json({
+      message: "User registered successfully",
+      user,
     });
+  });
 
-    res.json({ token });
-  } catch (error) {
-    res.status(500).json({ message: "Login failed", error });
-  }
-};
+  // User Login
+  login = asyncHandler(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    const ip = req.ip;
+    const userAgent = req.get("User-Agent") || "";
+
+    const result = await AuthService.login({ email, password }, ip, userAgent);
+
+    res.json(result);
+  });
+
+  // Refresh Token
+  refreshToken = asyncHandler(async (req: Request, res: Response) => {
+    const { refreshToken } = req.body;
+
+    const result = await AuthService.refreshToken(refreshToken);
+
+    res.json(result);
+  });
+
+  // Logout
+  logout = asyncHandler(async (req: Request, res: Response) => {
+    const userId = req.user!.userId;
+    const ip = req.ip;
+    const userAgent = req.get("User-Agent") || "";
+
+    const result = await AuthService.logout(userId, ip, userAgent);
+
+    res.json(result);
+  });
+
+  // Forgot Password
+  forgotPassword = asyncHandler(async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    // Implement password reset logic
+    await AuthService.initiatePasswordReset(email);
+
+    res.json({
+      message: "Password reset instructions sent to your email",
+    });
+  });
+
+  // Reset Password
+  resetPassword = asyncHandler(async (req: Request, res: Response) => {
+    const { token, newPassword } = req.body;
+
+    await AuthService.resetPassword(token, newPassword);
+
+    res.json({
+      message: "Password reset successfully",
+    });
+  });
+}
+
+export default new AuthController();

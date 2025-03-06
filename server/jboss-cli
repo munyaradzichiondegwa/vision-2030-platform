@@ -1,0 +1,21 @@
+9. Development Scripts
+```bash
+# scripts/setup.sh
+#!/bin/bash
+
+# Initialize project
+npm install
+npm run prepare
+
+# Install client dependencies
+cd client
+npm install
+
+# Install server dependencies
+cd ../server
+npm install
+
+# Setup environment files
+cp .env.example .env
+
+echo "Project setup complete!"

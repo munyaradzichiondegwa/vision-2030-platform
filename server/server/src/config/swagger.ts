@@ -1,40 +1,34 @@
-// server/src/config/swagger.ts
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
-import environment from "./environment";
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import { Express } from 'express';
 
-const options = {
+const swaggerOptions = {
   definition: {
-    openapi: "3.0.0",
+    openapi: '3.0.0',
     info: {
-      title: "Vision 2030 Platform API",
-      version: "1.0.0",
-      description: "National Development Platform API Documentation",
+      title: 'User Management API',
+      version: '1.0.0',
+      description: 'API documentation for User Management System'
     },
     servers: [
       {
-        url: `http://localhost:${environment.PORT}/api/v1`,
-      },
+        url: 'http://localhost:3001/api'
+      }
     ],
     components: {
       securitySchemes: {
-        BearerAuth: {
-          type: "http",
-          scheme: "bearer",
-          bearerFormat: "JWT",
-        },
-      },
-    },
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   },
-  apis: ["./src/routes/*.ts", "./src/models/*.ts"],
+  apis: ['./src/routes/*.ts']
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-export const swaggerDocs = (app: any) => {
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  app.get("/api-docs.json", (req: any, res: any) => {
-    res.setHeader("Content-Type", "application/json");
-    res.send(swaggerSpec);
-  });
-};
+export function setupSwagger(app: Express) {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

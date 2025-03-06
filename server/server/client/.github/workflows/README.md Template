@@ -1,0 +1,26 @@
+# Full Stack Project
+
+## Overview
+Comprehensive full-stack application with modern web technologies.
+
+## Tech Stack
+- Frontend: React, TypeScript, Tailwind CSS
+- Backend: Node.js, Express, TypeScript
+- Database: MongoDB
+- State Management: Context API
+- Authentication: JWT
+- Deployment: Docker, GitHub Actions
+
+## Prerequisites
+- Node.js 18+
+- Docker
+- npm or yarn
+
+## Local Development
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start development servers: `npm run start`
+
+## Running with Docker
+```bash
+docker-compose up --build

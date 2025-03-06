@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: project-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secure-password
+
+  redis:
+    image: redis:alpine
+    container_name: project-redis
+    ports:
+      - "6379:6379"
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: project-backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/projectdb
+      - REDIS_URL=redis://redis:6379
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: project-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+
+volumes:
+  mongodb_data:
+
+networks:
+  project-network:
+    driver: bridge
