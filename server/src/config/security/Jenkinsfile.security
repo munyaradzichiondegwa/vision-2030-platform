@@ -1,0 +1,65 @@
+// Jenkinsfile.security
+pipeline {
+  environment {
+    SECURE_BUILD_ENV = credentials('hsm-signed-cert')
+    ML_MODEL_KEY     = credentials('model-encryption-key')
+  }
+
+  stages {
+    stage('Model Fortification') {
+      steps {
+        script {
+          secureContainerBuild(
+            model: 'anomaly-detector-v7',
+            hardeningProfile: 'selinux-strict',
+            attestation: 'cristiano-v2',
+            runtimeShield: 'gvisor'
+          )
+          
+          cryptographicSeal(
+            artifacts: ['detector-model.bin'],
+            protocol: 'sgx-remote-attestation',
+            keyVault: 'azure-hsm-01'
+          )
+        }
+      }
+    }
+
+    stage('Adversarial Validation') {
+      steps {
+        runRobustnessTestSuite(
+          attackTypes: ['fgsm', 'shadow-model', 'model-inversion'],
+          successThreshold: 0.85
+        )
+        
+        performDataDriftAnalysis(
+          referenceSet: 'prod-baseline-2023Q4',
+          maxDivergence: 0.15
+        )
+      }
+    }
+
+    stage('Immutable Deployment') {
+      steps {
+        deploySecurityService(
+          environment: 'protected-core',
+          rolloutStrategy: 'canary-encrypted',
+          verification: {
+            runtimeAttestation: true,
+            policyCompliance: 'nist-800-204d'
+          }
+        )
+      }
+    }
+  }
+
+  post {
+    failure {
+      triggerIncidentResponse(
+        severity: 'DEPLOYMENT_FAILURE',
+        autoContain: ['build-farm'],
+        forensicCapture: true
+      )
+    }
+  }
+}

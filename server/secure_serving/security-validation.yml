@@ -1,0 +1,18 @@
+# security-validation.yml
+stages:
+  - attack_simulation:
+      scenarios:
+        - advanced_persistent_threat
+        - ransomware_lateral_movement
+      success_metrics:
+        detection_rate: 98%
+        mean_respond_time: "120s"
+
+  - resilience_testing:
+      failure_injection:
+        - model_degradation: 40%
+        - network_latency: "500ms"
+        - sensor_spoofing: 15%
+      recovery_thresholds:
+        auto_healing: "90s"
+        failover_capability: true
